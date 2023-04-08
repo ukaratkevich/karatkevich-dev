@@ -1,7 +1,7 @@
 name: pull_request_checks
 
 on:
-  pull-request:
+  pull_request:
     types:
       - opened
       - reopened
@@ -17,8 +17,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      debug: true
     steps:
       - name: Cloning repository...
         uses: actions/checkout@v3
