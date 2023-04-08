@@ -606,7 +606,7 @@ style:
   NestedClassesVisibility:
     active: true
   NewLineAtEndOfFile:
-    active: false
+    active: true
   NoTabs:
     active: false
   NullableBooleanCheck:
@@ -759,9 +759,9 @@ formatting:
   Filename:
     active: true
   FinalNewline:
-    active: true
-    autoCorrect: true
-    insertFinalNewLine: true
+    active: false
+    autoCorrect: false
+    insertFinalNewLine: false
   FunKeywordSpacing:
     active: false
     autoCorrect: true

@@ -9,6 +9,9 @@ val detektProject = tasks.register<Detekt>("detektProject") {
     description = "Runs detekt on the project without starting overhead for modules"
 
     setSource(files(projectDir))
+
+    this.config.setFrom(files(project.rootDir.resolve("config/detekt/detekt.yml")))
+    buildUponDefaultConfig = false
 }
 
 tasks.named("check").configure {
