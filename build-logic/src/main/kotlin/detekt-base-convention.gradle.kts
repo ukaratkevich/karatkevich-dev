@@ -11,6 +11,8 @@ dependencies {
 detekt {
     toolVersion = libs.versions.detektVersion.get()
 
+    basePath = rootProject.projectDir.absolutePath
+
     source = files(
         "src/main/kotlin",
         "src/main/java",
