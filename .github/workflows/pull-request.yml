@@ -17,6 +17,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: true
+      actions: read
+      contents: read
     steps:
       - name: Cloning repository...
         uses: actions/checkout@v3
