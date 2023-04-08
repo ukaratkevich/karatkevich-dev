@@ -11,10 +11,20 @@ dependencies {
 detekt {
     toolVersion = libs.versions.detektVersion.get()
 
+    source = files(
+        "src/main/kotlin",
+        "src/main/java",
+    )
+
+    config = files("config/detekt/detekt.yml")
     buildUponDefaultConfig = false
+
+    parallel = true
+
+    ignoreFailures = false
 }
 
-tasks.withType(Detekt::class.java).configureEach {
+tasks.withType(Detekt::class).configureEach {
     reports {
         sarif.required.set(true)
         xml.required.set(false)
@@ -22,6 +32,7 @@ tasks.withType(Detekt::class.java).configureEach {
         txt.required.set(false)
         md.required.set(false)
     }
+
+    exclude("**/build/**")
+    exclude("**/resources/**")
 }
-
-

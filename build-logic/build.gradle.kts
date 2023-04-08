@@ -2,6 +2,8 @@ plugins {
     `kotlin-dsl`
 }
 
+group = "build-logic"
+
 dependencies {
     implementation(libs.kotlinPlugin)
     implementation(libs.detektPlugin)
