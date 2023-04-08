@@ -22,10 +22,8 @@ jobs:
       actions: read
       contents: read
     steps:
-      - name: Cloning repository...
+      - name: Cloning repository
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Java
         uses: actions/setup-java@v3
