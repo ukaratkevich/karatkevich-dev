@@ -7,10 +7,10 @@ on:
       - reopened
       - synchronized
     branches:
-      - dev
+      - main
   push:
     branches:
-      - dev
+      - main
 
   workflow_dispatch:
 
@@ -59,7 +59,7 @@ jobs:
             }
 
       - name: Comment failed status
-        uses: actions/github-script@v6
+        uses: actions/github-script@v5
         if: failure()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
