@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      security-events: read
+      security-events: write
       actions: read
       contents: read
     steps:
@@ -21,6 +21,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
+          distribution: temurin
           java-version: 11
 
       - name: Setup Gradle
@@ -37,30 +38,8 @@ jobs:
       - name: Run tests
         run: ./gradlew test
 
-      - name: Uploading analysis report
+      - name: Upload analysis report
         uses: github/codeql-action/upload-sarif@v2
         if: success() || failure()
         with:
           sarif_file: build/reports/detekt.sarif
-
-      - name: Comment success status
-        uses: actions/github-script@v6
-        if: success()
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              body: '✅Build succeeded!'
-            }
-
-      - name: Comment failed status
-        uses: actions/github-script@v5
-        if: failure()
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              body: '❌Build failed!'
-            })
