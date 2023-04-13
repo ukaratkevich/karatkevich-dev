@@ -1,0 +1,47 @@
+name: pull_request_checks
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches: [ dev ]
+  push:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.5.1
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Static analysis
+        run: ./gradlew detektProject
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Upload analysis report
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: build/reports/detekt/detekt.sarif
