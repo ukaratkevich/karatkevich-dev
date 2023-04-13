@@ -8,12 +8,14 @@ on:
     branches: [ dev ]
 
 jobs:
-  pull:
+  build:
     runs-on: ubuntu-latest
+
     permissions:
       security-events: write
       actions: read
       contents: read
+
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
