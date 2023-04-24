@@ -4,6 +4,7 @@ kotlinLanguageVersionsGradle = "1.8"
 jvmToolchainVersion = "11"
 
 ktorVersion = "2.2.4"
+loggerVersion = "1.4.6"
 
 detektVersion = "1.22.0"
 
@@ -14,6 +15,7 @@ kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotli
 
 ktorCore = { module = "io.ktor:ktor-server-core", version.ref = "ktorVersion" }
 ktorNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktorVersion" }
+logger = { module = "ch.qos.logback:logback-classic", version.ref = "loggerVersion" }
 
 detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektVersion" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektVersion" }
