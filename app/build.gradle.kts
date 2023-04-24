@@ -4,6 +4,7 @@ plugins {
 }
 
 group = "dev.karatkevich"
+version = "1.0"
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
@@ -11,12 +12,5 @@ application {
 
 dependencies {
     implementation(libs.bundles.ktorServer)
-}
-
-tasks.named<JavaExec>("run") {
-    doFirst {
-        environment("DEBUG", project.properties["debug"] as String)
-        environment("HOST", project.properties["host"] as String)
-        environment("PORT", project.properties["port"] as String)
-    }
+    implementation(libs.logger)
 }
