@@ -1,5 +1,3 @@
-@file:JvmName("PluginsConfiguration")
-
 package dev.karatkevich
 
 import io.ktor.serialization.kotlinx.json.json
