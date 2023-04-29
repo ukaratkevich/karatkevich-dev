@@ -3,7 +3,7 @@ package dev.karatkevich
 import io.ktor.resources.Resource
 
 @Resource("/v1/blog")
-class Blog {
+internal class Blog {
 
     @Resource("articles")
     class Articles(val parent: Blog = Blog()) {

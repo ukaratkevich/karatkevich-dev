@@ -2,7 +2,7 @@ package dev.karatkevich.articles.services
 
 import dev.karatkevich.articles.models.Article
 
-interface ArticlesStore {
+internal interface ArticlesStore {
 
     fun getArticles(): List<Article.Existing>
     fun addArticle(article: Article.Existing)
@@ -30,4 +30,5 @@ interface ArticlesStore {
     }
 }
 
-fun ArticlesStore.find(predicate: (Article.Existing) -> Boolean) = getArticles().find(predicate)
+internal fun ArticlesStore.find(predicate: (Article.Existing) -> Boolean) =
+    getArticles().find(predicate)

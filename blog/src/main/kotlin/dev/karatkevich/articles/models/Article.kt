@@ -6,7 +6,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Article {
+internal sealed class Article {
+
     @Serializable
     data class New(
         @SerialName("title") val title: String,
@@ -19,7 +20,7 @@ sealed class Article {
     ) : Article()
 }
 
-fun New.toExisting(id: String): Existing {
+internal fun New.toExisting(id: String): Existing {
     return Existing(
         id = id,
         title = title,
