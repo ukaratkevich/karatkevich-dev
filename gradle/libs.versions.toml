@@ -18,7 +18,7 @@ ktorNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktorVersion" 
 ktorResources = { module = "io.ktor:ktor-server-resources", version.ref = "ktorVersion" }
 ktorContentNegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktorVersion" }
 ktorSerializationJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
-
+ktorValidation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktorVersion" }
 
 logger = { module = "ch.qos.logback:logback-classic", version.ref = "loggerVersion" }
 

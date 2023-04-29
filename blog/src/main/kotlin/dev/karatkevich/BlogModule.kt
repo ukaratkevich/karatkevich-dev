@@ -1,4 +1,4 @@
-@file:JvmName("BlogRoutes")
+@file:JvmName("BlogModule")
 
 package dev.karatkevich
 

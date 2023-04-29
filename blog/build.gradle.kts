@@ -10,7 +10,9 @@ group = "dev.karatkevich"
 dependencies {
     implementation(libs.ktorCore)
     implementation(libs.ktorResources)
+    implementation(libs.ktorValidation)
     implementation(libs.logger)
+    implementation(libs.ktorSerializationJson)
 
     testImplementation(libs.bundles.tests)
 }
