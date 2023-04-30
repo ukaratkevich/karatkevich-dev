@@ -1,5 +1,6 @@
 [versions]
 kotlinVersion = "1.8.10"
+coroutinesVersion = "1.6.4"
 kotlinLanguageVersionsGradle = "1.8"
 jvmToolchainVersion = "11"
 
@@ -11,6 +12,7 @@ detektVersion = "1.22.0"
 [libraries]
 kotlinPlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
 
+kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlinVersion" }
 
 ktorCore = { module = "io.ktor:ktor-server-core", version.ref = "ktorVersion" }
@@ -27,6 +29,7 @@ detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", v
 
 [plugins]
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 
 [bundles]
 ktorServer = ["ktorCore", "ktorNetty"]
