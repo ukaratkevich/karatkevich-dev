@@ -14,13 +14,14 @@ import io.ktor.server.routing.Route
 internal fun Route.putArticleRoute(articlesStore: ArticlesStore) {
     put<Blog.Articles.Id> { resource ->
         val article = call.receive<Article.New>().toExisting(resource.id)
+
         val isReplaced = articlesStore.replaceArticle(article)
 
-        if (!isReplaced) {
-            call.respond(HttpStatusCode.NotFound)
+        if (isReplaced) {
+            call.respond(HttpStatusCode.NoContent)
             return@put
         }
 
-        call.respond(HttpStatusCode.OK)
+        call.respond(HttpStatusCode.NotFound)
     }
 }

@@ -21,7 +21,9 @@ internal interface ArticlesStore {
         override fun replaceArticle(article: Article.Existing): Boolean {
             val isRemoved = articles.removeIf { it.id == article.id }
 
-            articles += article
+            if (isRemoved) {
+                articles += article
+            }
 
             return isRemoved
         }

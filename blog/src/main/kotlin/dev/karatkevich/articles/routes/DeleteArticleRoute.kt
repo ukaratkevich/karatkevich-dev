@@ -13,7 +13,6 @@ internal fun Route.deleteArticleRoute(articlesStore: ArticlesStore) {
         val isRemoved = articlesStore.removeArticle(resource.id)
 
         val code = if (isRemoved) {
-            // return representation?
             HttpStatusCode.NoContent
         } else {
             HttpStatusCode.NotFound

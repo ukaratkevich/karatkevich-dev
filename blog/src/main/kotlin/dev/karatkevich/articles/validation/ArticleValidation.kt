@@ -19,8 +19,11 @@ internal fun Route.articleValidation() {
                 """.trimMargin()
             }
 
-            if (messages.isEmpty()) ValidationResult.Valid
-            else ValidationResult.Invalid(messages)
+            if (messages.isEmpty()) {
+                ValidationResult.Valid
+            } else {
+                ValidationResult.Invalid(messages)
+            }
         }
     }
 }
