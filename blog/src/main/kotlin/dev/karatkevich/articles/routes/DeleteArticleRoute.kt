@@ -11,8 +11,14 @@ import io.ktor.server.routing.Route
 
 internal fun Route.deleteArticleRoute(articlesRepository: ArticlesRepository) {
     delete<Blog.Articles.Id> { resource ->
-        articlesRepository.delete(resource.id.toId())
+        val article = articlesRepository.delete(resource.id.toId())
 
-        call.respond(HttpStatusCode.NoContent)
+        val code = if (article == null) {
+            HttpStatusCode.NotFound
+        } else {
+            HttpStatusCode.NoContent
+        }
+
+        call.respond(code)
     }
 }
