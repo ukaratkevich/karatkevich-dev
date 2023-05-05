@@ -19,5 +19,9 @@ tasks.withType<KotlinCompile>().configureEach {
         apiVersion = kotlinVersion
 
         allWarningsAsErrors = true
+
+        freeCompilerArgs += listOf(
+            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        )
     }
 }
