@@ -1,7 +1,5 @@
-package dev.karatkevich.articles.models
+package dev.karatkevich.articles.view
 
-import dev.karatkevich.articles.models.Article.Existing
-import dev.karatkevich.articles.models.Article.New
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -22,13 +20,4 @@ internal sealed class Article {
         @SerialName("description") val description: String? = null,
         @SerialName("cover") val cover: String? = null,
     ) : Article()
-}
-
-internal fun New.toExisting(id: String): Existing {
-    return Existing(
-        id = id,
-        title = title,
-        cover = cover,
-        description = description,
-    )
 }

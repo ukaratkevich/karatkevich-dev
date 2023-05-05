@@ -1,6 +1,6 @@
-package dev.karatkevich.articles.validation
+package dev.karatkevich.articles.domain.validation
 
-import dev.karatkevich.articles.models.Article
+import dev.karatkevich.articles.view.Article
 import io.ktor.server.application.install
 import io.ktor.server.plugins.requestvalidation.RequestValidation
 import io.ktor.server.plugins.requestvalidation.ValidationResult
