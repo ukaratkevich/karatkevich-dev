@@ -2,8 +2,9 @@ package dev.karatkevich.articles.routes
 
 import dev.karatkevich.Blog
 import dev.karatkevich.articles.domain.ArticlesRepository
+import dev.karatkevich.articles.domain.entities.Article
 import dev.karatkevich.articles.domain.entities.toId
-import dev.karatkevich.articles.view.Article
+import dev.karatkevich.articles.view.ArticleRepresentation
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
@@ -13,18 +14,17 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import java.util.UUID
-import dev.karatkevich.articles.domain.entities.Article as DomainArticle
 
 internal fun Route.postArticleRoute(articlesRepository: ArticlesRepository) {
     post<Blog.Articles> {
-        val article = call.receive<Article.New>()
+        val representation = call.receive<ArticleRepresentation.New>()
 
         val createArticle = articlesRepository.save(
-            DomainArticle(
+            Article(
                 id = UUID.randomUUID().toString().toId(),
-                title = article.title,
-                description = article.description,
-                cover = article.cover,
+                title = representation.title,
+                description = representation.description,
+                cover = representation.cover,
             )
         )
 

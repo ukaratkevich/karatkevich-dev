@@ -2,28 +2,29 @@ package dev.karatkevich.articles.routes
 
 import dev.karatkevich.Blog
 import dev.karatkevich.articles.domain.ArticlesRepository
+import dev.karatkevich.articles.domain.entities.Article
 import dev.karatkevich.articles.domain.entities.toId
-import dev.karatkevich.articles.view.Article
+import dev.karatkevich.articles.view.ArticleRepresentation
+import dev.karatkevich.articles.view.toRepresentation
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.resources.put
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
-import dev.karatkevich.articles.domain.entities.Article as DomainArticle
 
 internal fun Route.putArticleRoute(articlesRepository: ArticlesRepository) {
     put<Blog.Articles.Id> { resource ->
-        val article = call.receive<Article.New>()
+        val representation = call.receive<ArticleRepresentation.New>()
 
         val updateArticle = articlesRepository.save(
-            DomainArticle(
+            Article(
                 id = resource.id.toId(),
-                title = article.title,
-                description = article.description,
-                cover = article.cover,
+                title = representation.title,
+                description = representation.description,
+                cover = representation.cover,
             )
         )
 
-        call.respond(updateArticle)
+        call.respond(updateArticle.toRepresentation())
     }
 }
