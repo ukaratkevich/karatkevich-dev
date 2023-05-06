@@ -3,7 +3,7 @@ package dev.karatkevich.articles.routes
 import dev.karatkevich.Blog
 import dev.karatkevich.articles.domain.ArticlesRepository
 import dev.karatkevich.articles.domain.entities.Article
-import dev.karatkevich.articles.domain.entities.toId
+import dev.karatkevich.articles.domain.entities.Id
 import dev.karatkevich.articles.view.ArticleRepresentation
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -13,7 +13,6 @@ import io.ktor.server.resources.href
 import io.ktor.server.resources.post
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
-import java.util.UUID
 
 internal fun Route.postArticleRoute(articlesRepository: ArticlesRepository) {
     post<Blog.Articles> {
@@ -21,7 +20,7 @@ internal fun Route.postArticleRoute(articlesRepository: ArticlesRepository) {
 
         val createArticle = articlesRepository.save(
             Article(
-                id = UUID.randomUUID().toString().toId(),
+                id = Id.EMPTY,
                 title = representation.title,
                 description = representation.description,
                 cover = representation.cover,

@@ -3,7 +3,7 @@ package dev.karatkevich.articles.routes
 import dev.karatkevich.Blog
 import dev.karatkevich.articles.domain.ArticlesRepository
 import dev.karatkevich.articles.domain.entities.Article
-import dev.karatkevich.articles.domain.entities.toId
+import dev.karatkevich.articles.domain.entities.Id.Companion.toId
 import dev.karatkevich.articles.view.ArticleRepresentation
 import dev.karatkevich.articles.view.toRepresentation
 import io.ktor.server.application.call

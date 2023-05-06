@@ -3,6 +3,7 @@ package dev.karatkevich.articles.model
 import dev.karatkevich.articles.domain.ArticlesRepository
 import dev.karatkevich.articles.domain.entities.Article
 import dev.karatkevich.articles.domain.entities.Id
+import dev.karatkevich.articles.domain.entities.Id.Companion.toId
 import dev.karatkevich.articles.domain.entities.isEmpty
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +11,7 @@ import kotlinx.coroutines.withContext
 
 internal class InMemoryArticlesRepository(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val idGenerator: () -> String,
 ) : ArticlesRepository {
 
     private val dispatcher = dispatcher.limitedParallelism(1)
@@ -38,7 +40,9 @@ internal class InMemoryArticlesRepository(
 
     private suspend fun create(article: Article): Article {
         return withContext(dispatcher) {
-            articles += article
+            articles += article.copy(
+                id = idGenerator().toId()
+            )
             article
         }
     }

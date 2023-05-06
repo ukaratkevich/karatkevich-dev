@@ -1,12 +1,12 @@
 package dev.karatkevich.articles.domain.entities
 
 @JvmInline
-value class Id(val value: String) {
+value class Id private constructor(val value: String) {
     companion object {
         val EMPTY = Id("")
+
+        fun String.toId() = Id(this)
     }
 }
 
 fun Id.isEmpty() = value.isEmpty()
-
-fun String.toId() = Id(this)

@@ -8,10 +8,13 @@ import dev.karatkevich.articles.routes.postArticleRoute
 import dev.karatkevich.articles.routes.putArticleRoute
 import io.ktor.server.application.Application
 import io.ktor.server.routing.routing
+import java.util.UUID
 
 internal fun Application.articlesRouting() {
     routing {
-        val articlesRepository = InMemoryArticlesRepository()
+        val articlesRepository = InMemoryArticlesRepository(
+            idGenerator = { UUID.randomUUID().toString() }
+        )
 
         articleValidation()
 
