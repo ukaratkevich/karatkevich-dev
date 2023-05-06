@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.ktorValidation)
     implementation(libs.logger)
     implementation(libs.ktorSerializationJson)
+    implementation(libs.kotlinCoroutines)
 
     testImplementation(libs.bundles.tests)
 }

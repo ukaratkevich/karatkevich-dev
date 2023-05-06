@@ -1,27 +1,30 @@
 package dev.karatkevich.articles.routes
 
 import dev.karatkevich.Blog
-import dev.karatkevich.articles.models.Article
-import dev.karatkevich.articles.models.toExisting
-import dev.karatkevich.articles.services.ArticlesStore
-import io.ktor.http.HttpStatusCode
+import dev.karatkevich.articles.domain.ArticlesRepository
+import dev.karatkevich.articles.domain.entities.Article
+import dev.karatkevich.articles.domain.entities.Id.Companion.toId
+import dev.karatkevich.articles.view.ArticleRepresentation
+import dev.karatkevich.articles.view.toRepresentation
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.resources.put
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 
-internal fun Route.putArticleRoute(articlesStore: ArticlesStore) {
+internal fun Route.putArticleRoute(articlesRepository: ArticlesRepository) {
     put<Blog.Articles.Id> { resource ->
-        val article = call.receive<Article.New>().toExisting(resource.id)
+        val representation = call.receive<ArticleRepresentation.New>()
 
-        val isReplaced = articlesStore.replaceArticle(article)
+        val updateArticle = articlesRepository.save(
+            Article(
+                id = resource.id.toId(),
+                title = representation.title,
+                description = representation.description,
+                cover = representation.cover,
+            )
+        )
 
-        if (isReplaced) {
-            call.respond(HttpStatusCode.NoContent)
-            return@put
-        }
-
-        call.respond(HttpStatusCode.NotFound)
+        call.respond(updateArticle.toRepresentation())
     }
 }

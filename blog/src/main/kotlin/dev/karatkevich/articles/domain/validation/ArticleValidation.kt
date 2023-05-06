@@ -1,6 +1,6 @@
-package dev.karatkevich.articles.validation
+package dev.karatkevich.articles.domain.validation
 
-import dev.karatkevich.articles.models.Article
+import dev.karatkevich.articles.view.ArticleRepresentation
 import io.ktor.server.application.install
 import io.ktor.server.plugins.requestvalidation.RequestValidation
 import io.ktor.server.plugins.requestvalidation.ValidationResult
@@ -10,7 +10,7 @@ private const val MAX_TITLE_LENGTH = 50
 
 internal fun Route.articleValidation() {
     install(RequestValidation) {
-        validate<Article.New> { article ->
+        validate<ArticleRepresentation.New> { article ->
             val messages = mutableListOf<String>()
 
             if (article.title.length > MAX_TITLE_LENGTH) {
