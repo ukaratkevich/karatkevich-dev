@@ -4,20 +4,20 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal sealed class ArticleRepresentation {
-
+sealed class ArticleRepresentation {
     @Serializable
-    data class New(
+    data class Request(
         @SerialName("title") val title: String,
         @SerialName("description") val description: String? = null,
         @SerialName("cover") val cover: String? = null,
     ) : ArticleRepresentation()
 
     @Serializable
-    data class Existing(
+    class Response(
         @SerialName("id") val id: String,
         @SerialName("title") val title: String,
         @SerialName("description") val description: String? = null,
         @SerialName("cover") val cover: String? = null,
-    ) : ArticleRepresentation()
+        @SerialName("publishDate") val publishDate: String,
+    )
 }

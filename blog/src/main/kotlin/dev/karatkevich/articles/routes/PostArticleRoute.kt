@@ -1,7 +1,7 @@
 package dev.karatkevich.articles.routes
 
 import dev.karatkevich.Blog
-import dev.karatkevich.articles.domain.ArticlesRepository
+import dev.karatkevich.articles.domain.ArticlesService
 import dev.karatkevich.articles.domain.entities.Article
 import dev.karatkevich.articles.domain.entities.Id
 import dev.karatkevich.articles.view.ArticleRepresentation
@@ -14,11 +14,11 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 
-internal fun Route.postArticleRoute(articlesRepository: ArticlesRepository) {
+internal fun Route.postArticleRoute(articlesService: ArticlesService) {
     post<Blog.Articles> {
-        val representation = call.receive<ArticleRepresentation.New>()
+        val representation = call.receive<ArticleRepresentation.Request>()
 
-        val createArticle = articlesRepository.save(
+        val createdArticle = articlesService.create(
             Article(
                 id = Id.EMPTY,
                 title = representation.title,
@@ -30,7 +30,7 @@ internal fun Route.postArticleRoute(articlesRepository: ArticlesRepository) {
         with(call) {
             response.headers.append(
                 HttpHeaders.Location,
-                application.href(Blog.Articles.Id(id = createArticle.id.value))
+                application.href(Blog.Articles.Id(id = createdArticle.id.value))
             )
 
             respond(HttpStatusCode.Created)
