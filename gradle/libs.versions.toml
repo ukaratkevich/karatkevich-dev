@@ -11,11 +11,13 @@ kotlinDateTime = "0.4.0"
 
 detektVersion = "1.22.0"
 
+kotest = "5.6.1"
+
 [libraries]
 kotlinPlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
 
 kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
-kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlinVersion" }
+kotlinSerialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlinVersion" }
 
 ktorCore = { module = "io.ktor:ktor-server-core", version.ref = "ktorVersion" }
 ktorNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktorVersion" }
@@ -23,18 +25,29 @@ ktorResources = { module = "io.ktor:ktor-server-resources", version.ref = "ktorV
 ktorContentNegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktorVersion" }
 ktorSerializationJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 ktorValidation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktorVersion" }
+ktorTestHost = { module = "io.ktor:ktor-server-test-host", version.ref = "ktorVersion" }
 
 logger = { module = "ch.qos.logback:logback-classic", version.ref = "loggerVersion" }
 
 detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektVersion" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektVersion" }
 
-kotlinDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref="kotlinDateTime" }
+kotlinDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinDateTime" }
+
+kotestRunner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotestAssertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 
 [plugins]
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 
 [bundles]
-ktorServer = ["ktorCore", "ktorNetty"]
-tests = ["kotlinTest"]
+ktorServer = ["ktorCore",
+    "ktorNetty",
+    "ktorResources",
+    "ktorContentNegotiation",
+    "ktorSerializationJson",
+    "ktorValidation"
+]
+
+tests = ["kotestRunner", "kotestAssertions"]

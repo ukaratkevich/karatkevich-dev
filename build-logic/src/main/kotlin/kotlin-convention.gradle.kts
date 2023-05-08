@@ -1,3 +1,4 @@
+import gradle.kotlin.dsl.accessors._b8e9b34270198d14a4ec0d8967890a50.implementation
 import gradle.kotlin.dsl.accessors._b8e9b34270198d14a4ec0d8967890a50.kotlin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -24,4 +25,8 @@ tasks.withType<KotlinCompile>().configureEach {
             "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
         )
     }
+}
+
+dependencies {
+    implementation(libs.kotlinCoroutines)
 }
