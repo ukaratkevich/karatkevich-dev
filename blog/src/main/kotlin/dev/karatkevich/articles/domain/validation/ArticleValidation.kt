@@ -10,7 +10,7 @@ private const val MAX_TITLE_LENGTH = 50
 
 internal fun Route.articleValidation() {
     install(RequestValidation) {
-        validate<ArticleRepresentation.Request> { article ->
+        validate<ArticleRepresentation.New> { article ->
             val messages = mutableListOf<String>()
 
             if (article.title.length > MAX_TITLE_LENGTH) {

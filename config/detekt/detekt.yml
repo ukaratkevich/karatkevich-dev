@@ -783,7 +783,8 @@ formatting:
     autoCorrect: true
   ImportOrdering:
     active: true
-    layout: '*,java.**,javax.**,kotlin.**,kotlinx.**,^'
+    autoCorrect: true
+    layout: '*,java.**,javax.**,kotlin.**,^'
   Indentation:
     active: true
     autoCorrect: true

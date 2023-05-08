@@ -7,8 +7,6 @@ jvmToolchainVersion = "11"
 ktorVersion = "2.2.4"
 loggerVersion = "1.4.6"
 
-kotlinDateTime = "0.4.0"
-
 detektVersion = "1.22.0"
 
 [libraries]
@@ -28,8 +26,6 @@ logger = { module = "ch.qos.logback:logback-classic", version.ref = "loggerVersi
 
 detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektVersion" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektVersion" }
-
-kotlinDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref="kotlinDateTime" }
 
 [plugins]
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }

@@ -14,7 +14,6 @@ dependencies {
     implementation(libs.logger)
     implementation(libs.ktorSerializationJson)
     implementation(libs.kotlinCoroutines)
-    implementation(libs.kotlinDateTime)
 
     testImplementation(libs.bundles.tests)
 }
