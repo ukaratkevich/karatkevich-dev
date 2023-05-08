@@ -1,24 +1,23 @@
 package dev.karatkevich.articles.routes
 
 import dev.karatkevich.Blog
-import dev.karatkevich.articles.domain.ArticlesRepository
+import dev.karatkevich.articles.domain.ArticlesService
 import dev.karatkevich.articles.domain.entities.Id.Companion.toId
+import dev.karatkevich.articles.view.toRepresentation
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.resources.delete
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 
-internal fun Route.deleteArticleRoute(articlesRepository: ArticlesRepository) {
+internal fun Route.deleteArticleRoute(articlesService: ArticlesService) {
     delete<Blog.Articles.Id> { resource ->
-        val article = articlesRepository.delete(resource.id.toId())
+        val article = articlesService.delete(resource.id.toId())
 
-        val code = if (article == null) {
-            HttpStatusCode.NotFound
+        if (article == null) {
+            call.respond(HttpStatusCode.NotFound)
         } else {
-            HttpStatusCode.NoContent
+            call.respond(article.toRepresentation())
         }
-
-        call.respond(code)
     }
 }

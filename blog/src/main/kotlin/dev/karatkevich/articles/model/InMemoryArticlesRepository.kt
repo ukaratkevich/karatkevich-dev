@@ -5,13 +5,16 @@ import dev.karatkevich.articles.domain.entities.Article
 import dev.karatkevich.articles.domain.entities.Id
 import dev.karatkevich.articles.domain.entities.Id.Companion.toId
 import dev.karatkevich.articles.domain.entities.isEmpty
+import java.util.UUID
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 
 internal class InMemoryArticlesRepository(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val idGenerator: () -> String,
+    private val clock: Clock = Clock.System,
+    private val idGenerator: () -> String = { UUID.randomUUID().toString() },
 ) : ArticlesRepository {
 
     private val dispatcher = dispatcher.limitedParallelism(1)
@@ -40,10 +43,15 @@ internal class InMemoryArticlesRepository(
 
     private suspend fun create(article: Article): Article {
         return withContext(dispatcher) {
-            articles += article.copy(
-                id = idGenerator().toId()
+            val newArticle = article.copy(
+                id = idGenerator().toId(),
+                publishDate = clock.now(),
+                updateDate = clock.now(),
             )
-            article
+
+            articles += newArticle
+
+            newArticle
         }
     }
 
@@ -54,7 +62,8 @@ internal class InMemoryArticlesRepository(
             val updatedArticle = existingArticle?.copy(
                 title = article.title,
                 description = article.description,
-                cover = article.cover
+                cover = article.cover,
+                updateDate = clock.now(),
             ) ?: article
 
             if (existingArticle != null) {
