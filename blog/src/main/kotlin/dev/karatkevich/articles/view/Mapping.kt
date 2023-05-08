@@ -8,6 +8,7 @@ internal fun Article.toRepresentation(): ArticleRepresentation.Response {
         title = title,
         description = description,
         cover = cover,
-        publishDate = publishDate.toString()
+        published = publishDate.toString(),
+        updated = updateDate.toString(),
     )
 }

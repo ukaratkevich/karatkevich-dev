@@ -43,10 +43,11 @@ internal class InMemoryArticlesRepository(
 
     private suspend fun create(article: Article): Article {
         return withContext(dispatcher) {
+            val timestamp = clock.now()
             val newArticle = article.copy(
                 id = idGenerator().toId(),
-                publishDate = clock.now(),
-                updateDate = clock.now(),
+                publishDate = timestamp,
+                updateDate = timestamp,
             )
 
             articles += newArticle

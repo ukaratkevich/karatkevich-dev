@@ -18,6 +18,7 @@ sealed class ArticleRepresentation {
         @SerialName("title") val title: String,
         @SerialName("description") val description: String? = null,
         @SerialName("cover") val cover: String? = null,
-        @SerialName("publishDate") val publishDate: String,
+        @SerialName("published") val published: String,
+        @SerialName("updated") val updated: String,
     )
 }
