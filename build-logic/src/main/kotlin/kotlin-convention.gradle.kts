@@ -21,7 +21,7 @@ tasks.withType<KotlinCompile>().configureEach {
 
         allWarningsAsErrors = true
 
-        freeCompilerArgs += listOf(
+        freeCompilerArgs = freeCompilerArgs + listOf(
             "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
         )
     }

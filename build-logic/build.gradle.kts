@@ -21,7 +21,6 @@ tasks.withType<KotlinCompile>().configureEach {
 dependencies {
     implementation(libs.kotlinPlugin)
     implementation(libs.detektPlugin)
-//    implementation(libs.kotlinSerialization)
 
     // Enables the use of version catalogue inside precompiled plugins
     // https://github.com/gradle/gradle/issues/15383
