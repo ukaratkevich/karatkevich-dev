@@ -3,7 +3,7 @@ plugins {
     id("kotlin-convention")
 }
 
-group = "dev.karatkevich"
+group = "karatkevichdev"
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")

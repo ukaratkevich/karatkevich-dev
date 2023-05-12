@@ -3,7 +3,7 @@ plugins {
     id("ktor-tests-convention")
 }
 
-group = "dev.karatkevich"
+group = "karatkevichdev"
 
 dependencies {
     implementation(libs.bundles.ktorServer)
