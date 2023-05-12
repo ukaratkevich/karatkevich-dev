@@ -5,18 +5,22 @@ plugins {
 
 sourceSets {
     val main by getting
+    val test by getting
 
     create("integrationTest") {
         java.setSrcDirs(files("src/integrationTest/kotlin"))
         resources.setSrcDirs(files("src/integrationTest/resources"))
 
-        compileClasspath += main.output
-        runtimeClasspath += main.output
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
     }
 }
 
 configurations {
     val integrationTest by sourceSets.getting
+
+    get(integrationTest.compileOnlyConfigurationName)
+        .extendsFrom(configurations.testCompileOnly.get())
 
     get(integrationTest.implementationConfigurationName)
         .extendsFrom(configurations.testImplementation.get())
@@ -27,12 +31,13 @@ configurations {
 
 val integrationTestTask = tasks.register<Test>("integrationTest") {
     description = "Runs integration tests"
-    group = "verification"
+    group = JavaBasePlugin.VERIFICATION_GROUP
 
     val integrationTest by sourceSets.getting
 
     testClassesDirs = integrationTest.output.classesDirs
     classpath = integrationTest.runtimeClasspath
+    shouldRunAfter(tasks.named("test"))
 }
 
 tasks.named("check") {
