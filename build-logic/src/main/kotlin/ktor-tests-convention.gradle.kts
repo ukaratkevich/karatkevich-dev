@@ -1,11 +1,14 @@
+import dev.karatkevich.configureIntegrationTests
+
 plugins {
-    id("integration-tests-convention")
+    id("tests-convention")
 }
 
-dependencies {
-    integrationTestImplementation(libs.ktorTestHost)
-}
-
-fun <T> DependencyHandlerScope.integrationTestImplementation(dependency: Provider<T>) {
-    "integrationTestImplementation"(dependency)
+testing {
+    configureIntegrationTests {
+        dependencies {
+            implementation(libs.ktorTestHost)
+            implementation(libs.kotestKtor)
+        }
+    }
 }

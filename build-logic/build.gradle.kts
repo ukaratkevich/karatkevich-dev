@@ -7,11 +7,11 @@ plugins {
 group = "build-logic"
 
 tasks.withType<KotlinCompile>().configureEach {
-    // maybe at some point build scripts can live with the separate kotlin version?
-    val kotlinLanguageVersion = libs.versions.kotlinLanguageVersionsGradle.get()
+    val kotlinLanguageVersion = libs.versions.kotlinLanguageVersionBuildScript.get()
+    val jvmTargetVersion = libs.versions.jvmTargetBuildScript.get()
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = jvmTargetVersion
 
         languageVersion = kotlinLanguageVersion
         apiVersion = kotlinLanguageVersion
