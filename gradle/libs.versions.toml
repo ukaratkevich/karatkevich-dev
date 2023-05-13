@@ -6,9 +6,6 @@ kotlinDateTime = "0.4.0"
 kotlinLanguageVersionGradle = "1.8"
 jvmToolchainVersion = "11"
 
-kotlinLanguageVersionBuildScript = "1.8"
-jvmTargetBuildScript = "17"
-
 ktorVersion = "2.2.4"
 loggerVersion = "1.4.6"
 
