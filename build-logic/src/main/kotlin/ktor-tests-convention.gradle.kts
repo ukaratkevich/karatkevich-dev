@@ -9,6 +9,7 @@ testing {
         dependencies {
             implementation(libs.ktorTestHost)
             implementation(libs.kotestKtor)
+            implementation(libs.ktorClientContentNegotiation)
         }
     }
 }

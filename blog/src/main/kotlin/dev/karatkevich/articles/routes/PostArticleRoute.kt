@@ -14,13 +14,13 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 
-internal fun Route.postArticleRoute(articlesService: ArticlesService) {
+fun Route.postArticleRoute(articlesService: ArticlesService) {
     post<Blog.Articles> {
         val representation = call.receive<ArticleRepresentation.Request>()
 
         val createdArticle = articlesService.create(
             Article(
-                id = Id.EMPTY,
+                uid = Id.EMPTY,
                 title = representation.title,
                 description = representation.description,
                 cover = representation.cover,
@@ -30,7 +30,7 @@ internal fun Route.postArticleRoute(articlesService: ArticlesService) {
         with(call) {
             response.headers.append(
                 HttpHeaders.Location,
-                application.href(Blog.Articles.Id(id = createdArticle.id.value))
+                application.href(Blog.Articles.Id(id = createdArticle.uid.value))
             )
 
             respond(HttpStatusCode.Created)

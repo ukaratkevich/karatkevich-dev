@@ -6,13 +6,17 @@ kotlinDateTime = "0.4.0"
 kotlinLanguageVersionGradle = "1.8"
 jvmToolchainVersion = "11"
 
+# ktor
 ktorVersion = "2.2.4"
 loggerVersion = "1.4.6"
 
+# lint
 detektVersion = "1.22.0"
 
+# test
 kotest = "5.6.1"
 kotestKtor = "2.0.0"
+mockk = "1.13.5"
 
 [libraries]
 # kotlin
@@ -21,7 +25,7 @@ kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", v
 kotlinSerialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlinVersion" }
 kotlinDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinDateTime" }
 
-# ktor
+# ktor server
 ktorCore = { module = "io.ktor:ktor-server-core", version.ref = "ktorVersion" }
 ktorNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktorVersion" }
 ktorResources = { module = "io.ktor:ktor-server-resources", version.ref = "ktorVersion" }
@@ -31,6 +35,9 @@ ktorValidation = { module = "io.ktor:ktor-server-request-validation", version.re
 ktorTestHost = { module = "io.ktor:ktor-server-test-host", version.ref = "ktorVersion" }
 logger = { module = "ch.qos.logback:logback-classic", version.ref = "loggerVersion" }
 
+# ktor client
+ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorVersion" }
+
 # lint
 detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektVersion" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektVersion" }
@@ -39,6 +46,7 @@ detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", v
 kotestRunner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotestAssertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotestKtor = { module = "io.kotest.extensions:kotest-assertions-ktor", version.ref = "kotestKtor" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }

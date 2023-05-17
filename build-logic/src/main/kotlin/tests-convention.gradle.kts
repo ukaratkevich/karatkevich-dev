@@ -1,7 +1,7 @@
 import dev.karatkevich.configureIntegrationTests
 
 plugins {
-    java
+    kotlin("jvm")
     `jvm-test-suite`
 }
 
@@ -32,11 +32,18 @@ testing {
                 dependencies {
                     implementation(libs.kotestRunner)
                     implementation(libs.kotestAssertions)
+                    implementation(libs.mockk)
                 }
             }
         }
     }
 }
+
+// By default, this configuration extends only `api`, but not `implementation`,
+// without this line we need to redeclare `main` dependencies
+// https://github.com/gradle/gradle/issues/19497
+configurations["integrationTestImplementation"]
+    .extendsFrom(configurations["implementation"])
 
 tasks.check {
     dependsOn(testing.suites.getByName("integrationTest"))
