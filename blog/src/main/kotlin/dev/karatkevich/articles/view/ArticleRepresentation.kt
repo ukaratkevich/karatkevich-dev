@@ -13,8 +13,8 @@ sealed class ArticleRepresentation {
     ) : ArticleRepresentation()
 
     @Serializable
-    class Response(
-        @SerialName("id") val id: String,
+    data class Response(
+        @SerialName("uid") val uid: String,
         @SerialName("title") val title: String,
         @SerialName("description") val description: String? = null,
         @SerialName("cover") val cover: String? = null,

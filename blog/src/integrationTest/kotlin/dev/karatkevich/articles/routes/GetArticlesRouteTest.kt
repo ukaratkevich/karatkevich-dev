@@ -1,57 +1,47 @@
 package dev.karatkevich.articles.routes
 
 import dev.karatkevich.articles.domain.ArticlesService
+import dev.karatkevich.articles.domain.entities.Article
+import dev.karatkevich.articles.domain.entities.Id.Companion.toId
 import dev.karatkevich.articles.model.InMemoryArticlesRepository
+import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLES
+import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLES_REPRESENTATION
 import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.GET_PATH
 import dev.karatkevich.articles.view.ArticleRepresentation
+import dev.karatkevich.withBaseApplication
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.ktor.client.shouldHaveContentType
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.equals.shouldBeEqual
+import io.kotest.matchers.string.shouldBeEmpty
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.withCharset
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.resources.Resources
-import io.ktor.server.testing.testApplication
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.properties.Delegates
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.datetime.Instant
-import kotlinx.serialization.json.Json
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 
 class GetArticlesRouteTest : DescribeSpec({
-    var environment by Delegates.notNull<Environment>()
+    var env by Delegates.notNull<Environment>()
 
     beforeEach {
-        environment = Environment()
+        env = Environment()
     }
 
     describe("get request") {
 
-        it("should return 200 OK with an empty list") {
-            // TODO this probably may be done once
-            testApplication {
-                install(ContentNegotiation) {
-                    json(Json)
-                }
-
-                install(Resources)
-
+        it("should return 200 OK with no articles") {
+            withBaseApplication { client ->
                 routing {
-                    getArticlesRoute(environment.articlesService)
-                }
-
-                createClient {
-                    install(ClientContentNegotiation) {
-                        json(Json)
-                    }
+                    getArticlesRoute(env.articlesService)
                 }
 
                 val response = client.get(GET_PATH)
@@ -65,52 +55,120 @@ class GetArticlesRouteTest : DescribeSpec({
             }
         }
 
-        describe("new items has been added") {
+        describe("new articles has been added") {
 
             beforeEach {
-                // TODO populate items
-            }
-
-            it("should return 200 OK with items") {
-                testApplication {
-
+                ARTICLES.forEach { article ->
+                    env.articlesRepository.save(article)
                 }
             }
 
-            describe("get item by id") {
+            it("should return 200 OK with articles") {
+                withBaseApplication { client ->
+                    routing {
+                        getArticlesRoute(env.articlesService)
+                    }
 
-                it("should return 200 OK and the item") {
-                    testApplication {
+                    val response = client.get(GET_PATH)
+                    assertSoftly {
+                        response.shouldHaveStatus(HttpStatusCode.OK)
+                        response.shouldHaveContentType(
+                            ContentType.Application.Json.withCharset(Charsets.UTF_8)
+                        )
+                        response.body<List<ArticleRepresentation.Response>>()
+                            .shouldContainExactly(ARTICLES_REPRESENTATION)
+                    }
+                }
+            }
 
+            describe("get article by id") {
+
+                it("should return 200 OK and the article") {
+                    withBaseApplication { client ->
+                        routing {
+                            getArticlesRoute(env.articlesService)
+                        }
+
+                        val response = client.get("$GET_PATH/0")
+                        assertSoftly {
+                            response.shouldHaveStatus(HttpStatusCode.OK)
+                            response.shouldHaveContentType(
+                                ContentType.Application.Json.withCharset(Charsets.UTF_8)
+                            )
+                            response.body<ArticleRepresentation.Response>()
+                                .shouldBeEqual(ARTICLES_REPRESENTATION.first())
+                        }
                     }
                 }
 
-                describe("item has been deleted") {
+                describe("an article has been deleted") {
 
                     beforeEach {
-                        // TODO remove item
+                        env.articlesRepository.delete("0".toId())
                     }
 
                     describe("get item by id") {
 
                         it("should return 404 Not Found") {
-                            testApplication {
+                            withBaseApplication { client ->
+                                routing {
+                                    getArticlesRoute(env.articlesService)
+                                }
 
+                                val response = client.get("$GET_PATH/0")
+                                assertSoftly {
+                                    response.shouldHaveStatus(HttpStatusCode.NotFound)
+                                    response.bodyAsText().shouldBeEmpty()
+                                }
+                            }
+                        }
+                    }
+
+                    describe("get articles") {
+
+                        it("should return 200 OK and articles without deleted one") {
+                            withBaseApplication { client ->
+                                routing {
+                                    getArticlesRoute(env.articlesService)
+                                }
+
+                                val response = client.get(GET_PATH)
+                                assertSoftly {
+                                    response.shouldHaveStatus(HttpStatusCode.OK)
+                                    response.shouldHaveContentType(
+                                        ContentType.Application.Json.withCharset(Charsets.UTF_8)
+                                    )
+                                    response.body<List<ArticleRepresentation.Response>>()
+                                        .shouldContainExactly(ARTICLES_REPRESENTATION.drop(1))
+                                }
                             }
                         }
                     }
                 }
             }
 
-            describe("items has been cleared") {
+            describe("articles has been cleared") {
 
                 beforeEach {
-                    // TODO clear repo
+                    ARTICLES.forEach { article ->
+                        env.articlesRepository.delete(article.uid)
+                    }
                 }
 
-                it("should return 200 OK with an empty list") {
-                    testApplication {
+                it("should return 200 OK with no articles") {
+                    withBaseApplication { client ->
+                        routing {
+                            getArticlesRoute(env.articlesService)
+                        }
 
+                        val response = client.get(GET_PATH)
+                        assertSoftly {
+                            response.shouldHaveStatus(HttpStatusCode.OK)
+                            response.shouldHaveContentType(
+                                ContentType.Application.Json.withCharset(Charsets.UTF_8)
+                            )
+                            response.body<List<ArticleRepresentation.Response>>().shouldBeEmpty()
+                        }
                     }
                 }
             }
@@ -118,12 +176,8 @@ class GetArticlesRouteTest : DescribeSpec({
     }
 }) {
     private class Environment {
-        val INSTANT = mockk<Instant> {
-            every { this@mockk.toString() } returns "0000-00-00T00.00.000Z"
-        }
-
         val articlesRepository = InMemoryArticlesRepository(
-            UnconfinedTestDispatcher(),
+            dispatcher = UnconfinedTestDispatcher(),
             clock = mockk {
                 every { now() } returns INSTANT
             },
@@ -133,6 +187,33 @@ class GetArticlesRouteTest : DescribeSpec({
 
         companion object {
             const val GET_PATH = "v1/blog/articles"
+            const val UTC_DATE = "0000-00-00T00.00.000Z"
+
+            val INSTANT = mockk<Instant> {
+                every { this@mockk.toString() } returns UTC_DATE
+            }
+
+            val ARTICLES = Array(10) { id ->
+                Article(
+                    uid = "$id".toId(),
+                    title = "$id",
+                    description = null,
+                    cover = null,
+                    publishDate = INSTANT,
+                    updateDate = INSTANT,
+                )
+            }
+
+            val ARTICLES_REPRESENTATION = ARTICLES.map { article ->
+                ArticleRepresentation.Response(
+                    uid = article.uid.value,
+                    title = article.title,
+                    description = article.description,
+                    cover = article.cover,
+                    published = UTC_DATE,
+                    updated = UTC_DATE,
+                )
+            }
         }
     }
 }

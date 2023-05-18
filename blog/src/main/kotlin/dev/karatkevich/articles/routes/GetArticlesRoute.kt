@@ -19,6 +19,10 @@ fun Route.getArticlesRoute(articlesService: ArticlesService) {
     get<Blog.Articles.Id> { resource ->
         val article = articlesService.getById(resource.id.toId())
 
-        call.respond(article?.toRepresentation() ?: HttpStatusCode.NotFound)
+        if (article != null) {
+            call.respond(article.toRepresentation())
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 }
