@@ -30,16 +30,16 @@ import kotlinx.datetime.Instant
 
 class GetArticlesRouteTest : DescribeSpec({
 
-    var env by Delegates.notNull<Environment>()
+    var environment by Delegates.notNull<Environment>()
 
     describe("get request with empty articles") {
 
         beforeEach {
-            env = Environment(emptyList())
+            environment = Environment(emptyList())
         }
 
         it("should return 200 OK with no articles") {
-            withBaseApplication(env.configuration) { client ->
+            withBaseApplication(environment) { client ->
                 val response = client.get(PATH)
 
                 assertSoftly {
@@ -56,11 +56,11 @@ class GetArticlesRouteTest : DescribeSpec({
     describe("get with populated articles") {
 
         beforeEach {
-            env = Environment()
+            environment = Environment()
         }
 
         it("should return 200 OK with articles") {
-            withBaseApplication(env.configuration) { client ->
+            withBaseApplication(environment) { client ->
                 val response = client.get(PATH)
 
                 assertSoftly {
@@ -80,7 +80,7 @@ class GetArticlesRouteTest : DescribeSpec({
 
             ARTICLES_REPRESENTATION.forEach { representation ->
                 it("should return 200 OK and $representation") {
-                    withBaseApplication(env.configuration) { client ->
+                    withBaseApplication(environment) { client ->
                         val response = client.get("$PATH/${representation.uid}")
 
                         assertSoftly {
@@ -99,7 +99,7 @@ class GetArticlesRouteTest : DescribeSpec({
         describe("get article with invalid uid") {
 
             it("should return 404 Not Found and empty body") {
-                withBaseApplication(env.configuration) { client ->
+                withBaseApplication(environment) { client ->
                     val response = client.get("$PATH/invalid_id")
 
                     assertSoftly {
@@ -113,14 +113,15 @@ class GetArticlesRouteTest : DescribeSpec({
 }) {
     private class Environment(
         articles: List<Article> = ARTICLES,
-    ) {
+    ) : (TestApplicationBuilder) -> Unit {
+
         val articlesRepository = InMemoryArticlesRepository(
             dispatcher = UnconfinedTestDispatcher(),
-            initial = articles
+            initial = articles,
         )
         val articlesService = ArticlesService(articlesRepository)
 
-        val configuration: TestApplicationBuilder.() -> Unit = {
+        override fun invoke(builder: TestApplicationBuilder) = with(builder) {
             routing {
                 getArticlesRoute(articlesService)
             }
