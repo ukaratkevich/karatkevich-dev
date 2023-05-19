@@ -4,10 +4,7 @@ import dev.karatkevich.articles.domain.ArticlesService
 import dev.karatkevich.articles.domain.entities.Article
 import dev.karatkevich.articles.domain.entities.Id.Companion.toId
 import dev.karatkevich.articles.model.InMemoryArticlesRepository
-import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLES
-import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLES_REPRESENTATIONS
-import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLE_WITH_INVALID_UID
-import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLE_WITH_VALID_UID
+import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLES_REPRESENTATION
 import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.PATH
 import dev.karatkevich.articles.view.ArticleRepresentation
 import dev.karatkevich.withBaseApplication
@@ -16,6 +13,7 @@ import io.kotest.assertions.ktor.client.shouldHaveContentType
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldBeSortedBy
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.string.shouldBeEmpty
@@ -25,28 +23,25 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.withCharset
-import io.mockk.every
-import io.mockk.mockk
+import io.ktor.server.testing.TestApplicationBuilder
 import kotlin.properties.Delegates
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.datetime.Instant
 
 class GetArticlesRouteTest : DescribeSpec({
-    var env by Delegates.notNull<Environment>()
 
-    beforeEach {
-        env = Environment()
-    }
+    var env by Delegates.notNull<Environment>()
 
     describe("get request with empty articles") {
 
-        it("should return 200 OK with no articles") {
-            withBaseApplication { client ->
-                routing {
-                    getArticlesRoute(env.articlesService)
-                }
+        beforeEach {
+            env = Environment(emptyList())
+        }
 
+        it("should return 200 OK with no articles") {
+            withBaseApplication(env.configuration) { client ->
                 val response = client.get(PATH)
+
                 assertSoftly {
                     response.shouldHaveStatus(HttpStatusCode.OK)
                     response.shouldHaveContentType(
@@ -61,57 +56,52 @@ class GetArticlesRouteTest : DescribeSpec({
     describe("get with populated articles") {
 
         beforeEach {
-            ARTICLES.forEach { article ->
-                env.articlesRepository.save(article)
-            }
+            env = Environment()
         }
 
         it("should return 200 OK with articles") {
-            withBaseApplication { client ->
-                routing {
-                    getArticlesRoute(env.articlesService)
-                }
-
+            withBaseApplication(env.configuration) { client ->
                 val response = client.get(PATH)
+
                 assertSoftly {
                     response.shouldHaveStatus(HttpStatusCode.OK)
                     response.shouldHaveContentType(
                         ContentType.Application.Json.withCharset(Charsets.UTF_8)
                     )
-                    response.body<List<ArticleRepresentation.Response>>()
-                        .shouldContainExactly(ARTICLES_REPRESENTATIONS)
+
+                    val body = response.body<List<ArticleRepresentation.Response>>()
+                    body.shouldContainExactly(ARTICLES_REPRESENTATION)
+                    body.shouldBeSortedBy { Instant.parse(it.published) }
                 }
             }
         }
 
-        describe("get article with valid uid=${ARTICLE_WITH_VALID_UID.uid}") {
-            it("should return 200 OK and $ARTICLE_WITH_VALID_UID") {
-                withBaseApplication { client ->
-                    routing {
-                        getArticlesRoute(env.articlesService)
-                    }
+        describe("get article with valid uid") {
 
-                    val response = client.get("$PATH/${ARTICLE_WITH_VALID_UID.uid}")
-                    assertSoftly {
-                        response.shouldHaveStatus(HttpStatusCode.OK)
-                        response.shouldHaveContentType(
-                            ContentType.Application.Json.withCharset(Charsets.UTF_8)
-                        )
-                        response.body<ArticleRepresentation.Response>()
-                            .shouldBeEqual(ARTICLE_WITH_VALID_UID)
+            ARTICLES_REPRESENTATION.forEach { representation ->
+                it("should return 200 OK and $representation") {
+                    withBaseApplication(env.configuration) { client ->
+                        val response = client.get("$PATH/${representation.uid}")
+
+                        assertSoftly {
+                            response.shouldHaveStatus(HttpStatusCode.OK)
+                            response.shouldHaveContentType(
+                                ContentType.Application.Json.withCharset(Charsets.UTF_8)
+                            )
+                            response.body<ArticleRepresentation.Response>()
+                                .shouldBeEqual(representation)
+                        }
                     }
                 }
             }
         }
 
-        describe("get article with invalid uid=${ARTICLE_WITH_INVALID_UID.uid}") {
+        describe("get article with invalid uid") {
+
             it("should return 404 Not Found and empty body") {
-                withBaseApplication { client ->
-                    routing {
-                        getArticlesRoute(env.articlesService)
-                    }
+                withBaseApplication(env.configuration) { client ->
+                    val response = client.get("$PATH/invalid_id")
 
-                    val response = client.get("$PATH/${ARTICLE_WITH_INVALID_UID.uid}")
                     assertSoftly {
                         response.shouldHaveStatus(HttpStatusCode.NotFound)
                         response.bodyAsText().shouldBeEmpty()
@@ -121,51 +111,46 @@ class GetArticlesRouteTest : DescribeSpec({
         }
     }
 }) {
-    private class Environment {
+    private class Environment(
+        articles: List<Article> = ARTICLES,
+    ) {
         val articlesRepository = InMemoryArticlesRepository(
             dispatcher = UnconfinedTestDispatcher(),
-            clock = mockk {
-                every { now() } returns INSTANT
-            },
-            idGenerator = { "" }
+            initial = articles
         )
         val articlesService = ArticlesService(articlesRepository)
 
+        val configuration: TestApplicationBuilder.() -> Unit = {
+            routing {
+                getArticlesRoute(articlesService)
+            }
+        }
+
         companion object {
             const val PATH = "v1/blog/articles"
-            const val UTC_DATE = "0000-00-00T00.00.000Z"
 
-            val INSTANT = mockk<Instant> {
-                every { this@mockk.toString() } returns UTC_DATE
-            }
-
-            val ARTICLES = Array(10) { id ->
+            val ARTICLES = List(10) { id ->
                 Article(
                     uid = "$id".toId(),
                     title = "$id",
                     description = null,
                     cover = null,
-                    publishDate = INSTANT,
-                    updateDate = INSTANT,
+                    publishDate = Instant.fromEpochMilliseconds(id.toLong()),
                 )
             }
 
-            val ARTICLES_REPRESENTATIONS = ARTICLES.map { article ->
-                ArticleRepresentation.Response(
-                    uid = article.uid.value,
-                    title = article.title,
-                    description = article.description,
-                    cover = article.cover,
-                    published = UTC_DATE,
-                    updated = UTC_DATE,
-                )
-            }
-
-            val ARTICLE_WITH_VALID_UID = ARTICLES_REPRESENTATIONS.first()
-
-            val ARTICLE_WITH_INVALID_UID = ARTICLE_WITH_VALID_UID.copy(
-                uid = ARTICLE_WITH_VALID_UID.uid.repeat(5)
-            )
+            val ARTICLES_REPRESENTATION = ARTICLES
+                .sortedBy(Article::publishDate)
+                .map { article ->
+                    ArticleRepresentation.Response(
+                        uid = article.uid.value,
+                        title = article.title,
+                        description = article.description,
+                        cover = article.cover,
+                        published = article.publishDate.toString(),
+                        updated = article.updateDate.toString(),
+                    )
+                }
         }
     }
 }

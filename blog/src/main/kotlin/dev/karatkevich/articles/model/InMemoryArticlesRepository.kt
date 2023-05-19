@@ -14,10 +14,11 @@ import kotlinx.datetime.Clock
 class InMemoryArticlesRepository(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO.limitedParallelism(1),
     private val clock: Clock = Clock.System,
-    private val idGenerator: () -> String = { UUID.randomUUID().toString() },
+    private val uidGenerator: () -> String = { UUID.randomUUID().toString() },
+    initial: List<Article> = emptyList(),
 ) : ArticlesRepository {
 
-    private val articles = mutableListOf<Article>()
+    private val articles = initial.toMutableList()
 
     override suspend fun getAll(): List<Article> {
         return withContext(dispatcher) {
@@ -43,7 +44,7 @@ class InMemoryArticlesRepository(
         return withContext(dispatcher) {
             val timestamp = clock.now()
             val newArticle = article.copy(
-                uid = idGenerator().toId(),
+                uid = uidGenerator().toId(),
                 publishDate = timestamp,
                 updateDate = timestamp,
             )

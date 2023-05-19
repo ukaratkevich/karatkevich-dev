@@ -9,7 +9,8 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.Json
 
 internal fun withBaseApplication(
-    configuration: suspend ApplicationTestBuilder.(client: HttpClient) -> Unit,
+    configuration: suspend ApplicationTestBuilder.() -> Unit,
+    test: suspend (client: HttpClient) -> Unit,
 ) = testApplication {
     install(ContentNegotiation) {
         json(Json)
@@ -23,5 +24,6 @@ internal fun withBaseApplication(
         }
     }
 
-    configuration(client)
+    configuration()
+    test(client)
 }
