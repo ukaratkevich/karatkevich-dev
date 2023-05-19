@@ -21,7 +21,7 @@ class InMemoryArticlesRepository(
 
     override suspend fun getAll(): List<Article> {
         return withContext(dispatcher) {
-            articles.toList()
+            articles.sortedBy { it.publishDate }.toList()
         }
     }
 
