@@ -10,26 +10,23 @@ import dev.karatkevich.articles.view.ArticleRepresentation
 import dev.karatkevich.withBaseApplication
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.comparables.shouldBeGreaterThan
-import io.kotest.matchers.equality.shouldBeEqualToIgnoringFields
+import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.string.shouldBeEmpty
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
+import io.ktor.client.request.delete
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
 import io.ktor.server.testing.TestApplicationBuilder
 import kotlin.properties.Delegates
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.datetime.Instant
 
-class PutArticleRouteTest : DescribeSpec({
+class DeleteArticleRouteTest : DescribeSpec({
 
-    describe("PUT existing article") {
+    describe("DELETE article") {
         var environment by Delegates.notNull<Environment>()
         var response by Delegates.notNull<HttpResponse>()
 
@@ -37,38 +34,24 @@ class PutArticleRouteTest : DescribeSpec({
             environment = Environment(listOf(ARTICLE))
 
             withBaseApplication(environment) { client ->
-                response = client.put("$ARTICLES_PATH/${ARTICLE.uid.value}") {
+                response = client.delete("$ARTICLES_PATH/${ARTICLE.uid.value}") {
                     accept(ContentType.Application.Json)
-                    contentType(ContentType.Application.Json)
-                    setBody(UPDATED_ARTICLE_REPRESENTATION)
                 }
             }
         }
 
-        it("should return 200 OK") {
+        it("should return 200 OK status code") {
             response.shouldHaveStatus(HttpStatusCode.OK)
         }
 
-        it("should return updated article as a payload") {
-            val updatedArticle = response.body<ArticleRepresentation.Response>()
+        it("should return deleted article as a payload") {
+            val deletedArticle = response.body<ArticleRepresentation.Response>()
 
-            updatedArticle.shouldBeEqualToIgnoringFields(
-                ARTICLE_RESPONSE,
-                ArticleRepresentation.Response::updated,
-            )
-        }
-
-        it("should have new updated date") {
-            val updatedArticle = response.body<ArticleRepresentation.Response>()
-
-            val oldUpdatedDate = ARTICLE.updateDate
-            val newUpdatedDate = Instant.parse(updatedArticle.updated)
-
-            newUpdatedDate.shouldBeGreaterThan(oldUpdatedDate)
+            deletedArticle.shouldBeEqual(DELETED_ARTICLE_RESPONSE)
         }
     }
 
-    describe("PUT a new article") {
+    describe("DELETE not existing article") {
         var environment by Delegates.notNull<Environment>()
         var response by Delegates.notNull<HttpResponse>()
 
@@ -76,15 +59,13 @@ class PutArticleRouteTest : DescribeSpec({
             environment = Environment(emptyList())
 
             withBaseApplication(environment) { client ->
-                response = client.put("$ARTICLES_PATH/${ARTICLE.uid.value}") {
+                response = client.delete("$ARTICLES_PATH/${ARTICLE.uid.value}") {
                     accept(ContentType.Application.Json)
-                    contentType(ContentType.Application.Json)
-                    setBody(UPDATED_ARTICLE_REPRESENTATION)
                 }
             }
         }
 
-        it("should return 404 Not Found") {
+        it("should return 404 Not Found status code") {
             response.shouldHaveStatus(HttpStatusCode.NotFound)
         }
 
@@ -96,28 +77,21 @@ class PutArticleRouteTest : DescribeSpec({
     private class Environment(
         articles: List<Article> = emptyList(),
     ) : (TestApplicationBuilder) -> Unit {
+
         val articlesRepository = InMemoryArticlesRepository(
             dispatcher = UnconfinedTestDispatcher(),
             initial = articles,
         )
         val articlesService = ArticlesService(articlesRepository)
 
-        override fun invoke(builder: TestApplicationBuilder) {
-            with(builder) {
-                routing {
-                    articlesRoutes(articlesService)
-                }
+        override fun invoke(builder: TestApplicationBuilder) = with(builder) {
+            routing {
+                articlesRoutes(articlesService)
             }
         }
     }
 
     private companion object {
-        val UPDATED_ARTICLE_REPRESENTATION = ArticleRepresentation.Request(
-            title = "1",
-            description = "1",
-            cover = "1",
-        )
-
         val ARTICLE = Article(
             uid = "0".toId(),
             title = "0",
@@ -126,11 +100,11 @@ class PutArticleRouteTest : DescribeSpec({
             publishDate = Instant.fromEpochMilliseconds(0L),
         )
 
-        val ARTICLE_RESPONSE = ArticleRepresentation.Response(
+        val DELETED_ARTICLE_RESPONSE = ArticleRepresentation.Response(
             uid = "0",
-            title = "1",
-            description = "1",
-            cover = "1",
+            title = "0",
+            description = "0",
+            cover = "0",
             published = "1970-01-01T00:00:00Z",
             updated = "1970-01-01T00:00:00Z",
         )
