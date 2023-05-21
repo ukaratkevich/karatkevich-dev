@@ -1,11 +1,11 @@
 package dev.karatkevich.articles.routes
 
+import dev.karatkevich.articles.PATH
+import dev.karatkevich.articles.articlesRoutes
 import dev.karatkevich.articles.domain.ArticlesService
 import dev.karatkevich.articles.domain.entities.Article
 import dev.karatkevich.articles.domain.entities.Id.Companion.toId
 import dev.karatkevich.articles.model.InMemoryArticlesRepository
-import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.ARTICLES_REPRESENTATION
-import dev.karatkevich.articles.routes.GetArticlesRouteTest.Environment.Companion.PATH
 import dev.karatkevich.articles.view.ArticleRepresentation
 import dev.karatkevich.withBaseApplication
 import io.kotest.assertions.assertSoftly
@@ -123,35 +123,33 @@ class GetArticlesRouteTest : DescribeSpec({
 
         override fun invoke(builder: TestApplicationBuilder) = with(builder) {
             routing {
-                getArticlesRoute(articlesService)
+                articlesRoutes(articlesService)
             }
         }
+    }
 
-        companion object {
-            const val PATH = "v1/blog/articles"
+    private companion object {
+        val ARTICLES = List(10) { id ->
+            Article(
+                uid = "$id".toId(),
+                title = "$id",
+                description = null,
+                cover = null,
+                publishDate = Instant.fromEpochMilliseconds(id.toLong()),
+            )
+        }
 
-            val ARTICLES = List(10) { id ->
-                Article(
-                    uid = "$id".toId(),
-                    title = "$id",
-                    description = null,
-                    cover = null,
-                    publishDate = Instant.fromEpochMilliseconds(id.toLong()),
+        val ARTICLES_REPRESENTATION = ARTICLES
+            .sortedBy(Article::publishDate)
+            .map { article ->
+                ArticleRepresentation.Response(
+                    uid = article.uid.value,
+                    title = article.title,
+                    description = article.description,
+                    cover = article.cover,
+                    published = article.publishDate.toString(),
+                    updated = article.updateDate.toString(),
                 )
             }
-
-            val ARTICLES_REPRESENTATION = ARTICLES
-                .sortedBy(Article::publishDate)
-                .map { article ->
-                    ArticleRepresentation.Response(
-                        uid = article.uid.value,
-                        title = article.title,
-                        description = article.description,
-                        cover = article.cover,
-                        published = article.publishDate.toString(),
-                        updated = article.updateDate.toString(),
-                    )
-                }
-        }
     }
 }

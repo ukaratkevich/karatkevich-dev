@@ -1,4 +1,4 @@
-package dev.karatkevich.articles.domain.validation
+package dev.karatkevich.articles.view.validation
 
 import dev.karatkevich.articles.view.ArticleRepresentation
 import io.ktor.server.application.install
@@ -8,7 +8,7 @@ import io.ktor.server.routing.Route
 
 private const val MAX_TITLE_LENGTH = 50
 
-internal fun Route.articleValidation() {
+fun Route.installArticlesValidation() {
     install(RequestValidation) {
         validate<ArticleRepresentation.Request> { article ->
             val messages = mutableListOf<String>()
