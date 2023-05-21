@@ -1,6 +1,6 @@
 package dev.karatkevich.articles.routes
 
-import dev.karatkevich.articles.PATH
+import dev.karatkevich.articles.ARTICLES_PATH
 import dev.karatkevich.articles.articlesRoutes
 import dev.karatkevich.articles.domain.ArticlesService
 import dev.karatkevich.articles.domain.entities.Article
@@ -36,13 +36,13 @@ class PostArticleRouteTest : DescribeSpec({
         environment = Environment()
     }
 
-    describe("post article") {
+    describe("POST article") {
 
         var response by Delegates.notNull<HttpResponse>()
 
         beforeEach {
             withBaseApplication(environment) { client ->
-                response = client.post(PATH) {
+                response = client.post(ARTICLES_PATH) {
                     accept(ContentType.Application.Json)
                     contentType(ContentType.Application.Json)
                     setBody(ARTICLE_REPRESENTATION)
@@ -89,13 +89,13 @@ class PostArticleRouteTest : DescribeSpec({
             }
         }
 
-        describe("post the same article") {
+        describe("POST the same article") {
 
             var secondResponse by Delegates.notNull<HttpResponse>()
 
             beforeEach {
                 withBaseApplication(environment) { client ->
-                    secondResponse = client.post(PATH) {
+                    secondResponse = client.post(ARTICLES_PATH) {
                         accept(ContentType.Application.Json)
                         contentType(ContentType.Application.Json)
                         setBody(ARTICLE_REPRESENTATION)
@@ -160,14 +160,12 @@ class PostArticleRouteTest : DescribeSpec({
     }
 
     // TODO add test cases here after validation constraints implementation
-    describe("post invalid article") {
+    describe("POST invalid article") {
 
         beforeEach {
-
         }
 
         it("returns error") {
-
         }
     }
 }) {

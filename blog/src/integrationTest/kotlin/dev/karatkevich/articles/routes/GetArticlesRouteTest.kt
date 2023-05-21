@@ -1,6 +1,6 @@
 package dev.karatkevich.articles.routes
 
-import dev.karatkevich.articles.PATH
+import dev.karatkevich.articles.ARTICLES_PATH
 import dev.karatkevich.articles.articlesRoutes
 import dev.karatkevich.articles.domain.ArticlesService
 import dev.karatkevich.articles.domain.entities.Article
@@ -40,7 +40,7 @@ class GetArticlesRouteTest : DescribeSpec({
 
         it("should return 200 OK with no articles") {
             withBaseApplication(environment) { client ->
-                val response = client.get(PATH)
+                val response = client.get(ARTICLES_PATH)
 
                 assertSoftly {
                     response.shouldHaveStatus(HttpStatusCode.OK)
@@ -61,7 +61,7 @@ class GetArticlesRouteTest : DescribeSpec({
 
         it("should return 200 OK with articles") {
             withBaseApplication(environment) { client ->
-                val response = client.get(PATH)
+                val response = client.get(ARTICLES_PATH)
 
                 assertSoftly {
                     response.shouldHaveStatus(HttpStatusCode.OK)
@@ -81,7 +81,7 @@ class GetArticlesRouteTest : DescribeSpec({
             ARTICLES_REPRESENTATION.forEach { representation ->
                 it("should return 200 OK and $representation") {
                     withBaseApplication(environment) { client ->
-                        val response = client.get("$PATH/${representation.uid}")
+                        val response = client.get("$ARTICLES_PATH/${representation.uid}")
 
                         assertSoftly {
                             response.shouldHaveStatus(HttpStatusCode.OK)
@@ -100,7 +100,7 @@ class GetArticlesRouteTest : DescribeSpec({
 
             it("should return 404 Not Found and empty body") {
                 withBaseApplication(environment) { client ->
-                    val response = client.get("$PATH/invalid_id")
+                    val response = client.get("$ARTICLES_PATH/invalid_id")
 
                     assertSoftly {
                         response.shouldHaveStatus(HttpStatusCode.NotFound)
