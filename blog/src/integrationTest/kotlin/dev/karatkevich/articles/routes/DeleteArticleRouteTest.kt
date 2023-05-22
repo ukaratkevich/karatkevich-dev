@@ -75,7 +75,7 @@ class DeleteArticleRouteTest : DescribeSpec({
     }
 }) {
     private class Environment(
-        articles: List<Article> = emptyList(),
+        articles: List<Article>,
     ) : (TestApplicationBuilder) -> Unit {
 
         val articlesRepository = InMemoryArticlesRepository(
