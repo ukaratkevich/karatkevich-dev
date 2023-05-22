@@ -11,30 +11,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 
-internal class InMemoryArticlesRepository(
-    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+class InMemoryArticlesRepository(
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO.limitedParallelism(1),
     private val clock: Clock = Clock.System,
-    private val idGenerator: () -> String = { UUID.randomUUID().toString() },
+    private val uidGenerator: () -> String = { UUID.randomUUID().toString() },
+    initial: List<Article> = emptyList(),
 ) : ArticlesRepository {
 
-    private val dispatcher = dispatcher.limitedParallelism(1)
-
-    private val articles = mutableListOf<Article>()
+    private val articles = initial.toMutableList()
 
     override suspend fun getAll(): List<Article> {
         return withContext(dispatcher) {
-            articles.toList()
+            articles.sortedBy { it.publishDate }.toList()
         }
     }
 
     override suspend fun getById(id: Id): Article? {
         return withContext(dispatcher) {
-            articles.find { it.id == id }
+            articles.find { it.uid == id }
         }
     }
 
     override suspend fun save(article: Article): Article {
-        return if (article.id.isEmpty()) {
+        return if (article.uid.isEmpty()) {
             create(article)
         } else {
             update(article)
@@ -45,7 +44,7 @@ internal class InMemoryArticlesRepository(
         return withContext(dispatcher) {
             val timestamp = clock.now()
             val newArticle = article.copy(
-                id = idGenerator().toId(),
+                uid = uidGenerator().toId(),
                 publishDate = timestamp,
                 updateDate = timestamp,
             )
@@ -58,7 +57,7 @@ internal class InMemoryArticlesRepository(
 
     private suspend fun update(article: Article): Article {
         return withContext(dispatcher) {
-            val existingArticle = articles.find { it.id == article.id }
+            val existingArticle = articles.find { it.uid == article.uid }
 
             val updatedArticle = existingArticle?.copy(
                 title = article.title,

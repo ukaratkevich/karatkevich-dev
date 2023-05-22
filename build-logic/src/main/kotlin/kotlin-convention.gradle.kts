@@ -1,4 +1,3 @@
-import gradle.kotlin.dsl.accessors._b8e9b34270198d14a4ec0d8967890a50.kotlin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -10,7 +9,7 @@ kotlin {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    val kotlinVersion = libs.versions.kotlinLanguageVersionsGradle.get()
+    val kotlinVersion = libs.versions.kotlinLanguageVersionGradle.get()
 
     kotlinOptions {
         jvmTarget = "11"
@@ -20,8 +19,12 @@ tasks.withType<KotlinCompile>().configureEach {
 
         allWarningsAsErrors = true
 
-        freeCompilerArgs += listOf(
-            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
         )
     }
+}
+
+dependencies {
+    implementation(libs.kotlinCoroutines)
 }

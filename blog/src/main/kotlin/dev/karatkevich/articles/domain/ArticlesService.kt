@@ -14,7 +14,7 @@ class ArticlesService(
     suspend fun create(article: Article): Article = repository.save(article)
 
     suspend fun update(article: Article): Article? {
-        val existingArticle = getById(article.id)
+        val existingArticle = getById(article.uid)
 
         if (existingArticle != null) {
             return repository.save(article)

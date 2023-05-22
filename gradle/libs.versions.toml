@@ -1,40 +1,64 @@
 [versions]
 kotlinVersion = "1.8.10"
 coroutinesVersion = "1.6.4"
-kotlinLanguageVersionsGradle = "1.8"
+kotlinDateTime = "0.4.0"
+
+kotlinLanguageVersionGradle = "1.8"
 jvmToolchainVersion = "11"
 
+# ktor
 ktorVersion = "2.2.4"
 loggerVersion = "1.4.6"
 
-kotlinDateTime = "0.4.0"
-
+# lint
 detektVersion = "1.22.0"
 
+# test
+kotest = "5.6.1"
+kotestKtor = "2.0.0"
+mockk = "1.13.5"
+
 [libraries]
+# kotlin
 kotlinPlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
-
 kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
-kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlinVersion" }
+kotlinSerialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlinVersion" }
+kotlinDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinDateTime" }
 
+# ktor server
 ktorCore = { module = "io.ktor:ktor-server-core", version.ref = "ktorVersion" }
 ktorNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktorVersion" }
 ktorResources = { module = "io.ktor:ktor-server-resources", version.ref = "ktorVersion" }
 ktorContentNegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktorVersion" }
 ktorSerializationJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 ktorValidation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktorVersion" }
-
+ktorTestHost = { module = "io.ktor:ktor-server-test-host", version.ref = "ktorVersion" }
 logger = { module = "ch.qos.logback:logback-classic", version.ref = "loggerVersion" }
 
+# ktor client
+ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorVersion" }
+
+# lint
 detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektVersion" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektVersion" }
 
-kotlinDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref="kotlinDateTime" }
+# test
+kotestRunner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotestAssertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotestKtor = { module = "io.kotest.extensions:kotest-assertions-ktor", version.ref = "kotestKtor" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 
 [bundles]
-ktorServer = ["ktorCore", "ktorNetty"]
-tests = ["kotlinTest"]
+ktorServer = ["ktorCore",
+    "ktorNetty",
+    "ktorResources",
+    "ktorContentNegotiation",
+    "ktorSerializationJson",
+    "ktorValidation"
+]
+
+tests = ["kotestRunner", "kotestAssertions"]

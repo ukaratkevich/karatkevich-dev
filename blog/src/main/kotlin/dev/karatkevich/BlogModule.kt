@@ -2,9 +2,18 @@
 
 package dev.karatkevich
 
-import dev.karatkevich.articles.articlesRouting
+import dev.karatkevich.articles.articlesRoutes
+import dev.karatkevich.articles.domain.ArticlesService
+import dev.karatkevich.articles.model.InMemoryArticlesRepository
 import io.ktor.server.application.Application
+import io.ktor.server.routing.routing
 
 fun Application.blogModule() {
-    articlesRouting()
+    val articlesService = ArticlesService(
+        repository = InMemoryArticlesRepository(),
+    )
+
+    routing {
+        articlesRoutes(articlesService)
+    }
 }

@@ -11,7 +11,7 @@ import io.ktor.server.resources.get
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 
-internal fun Route.getArticlesRoute(articlesService: ArticlesService) {
+fun Route.getArticlesRoute(articlesService: ArticlesService) {
     get<Blog.Articles> {
         call.respond(articlesService.getAll().map(Article::toRepresentation))
     }
@@ -19,6 +19,10 @@ internal fun Route.getArticlesRoute(articlesService: ArticlesService) {
     get<Blog.Articles.Id> { resource ->
         val article = articlesService.getById(resource.id.toId())
 
-        call.respond(article?.toRepresentation() ?: HttpStatusCode.NotFound)
+        if (article != null) {
+            call.respond(article.toRepresentation())
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 }

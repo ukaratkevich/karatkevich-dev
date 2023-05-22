@@ -10,7 +10,7 @@ import io.ktor.server.resources.delete
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 
-internal fun Route.deleteArticleRoute(articlesService: ArticlesService) {
+fun Route.deleteArticleRoute(articlesService: ArticlesService) {
     delete<Blog.Articles.Id> { resource ->
         val article = articlesService.delete(resource.id.toId())
 

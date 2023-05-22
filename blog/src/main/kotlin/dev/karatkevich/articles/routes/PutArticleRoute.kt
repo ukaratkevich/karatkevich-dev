@@ -13,13 +13,13 @@ import io.ktor.server.resources.put
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 
-internal fun Route.putArticleRoute(articlesService: ArticlesService) {
+fun Route.putArticleRoute(articlesService: ArticlesService) {
     put<Blog.Articles.Id> { resource ->
         val representation = call.receive<ArticleRepresentation.Request>()
 
         val updateArticle = articlesService.update(
             Article(
-                id = resource.id.toId(),
+                uid = resource.id.toId(),
                 title = representation.title,
                 description = representation.description,
                 cover = representation.cover,
