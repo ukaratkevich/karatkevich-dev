@@ -66,7 +66,7 @@ comments:
     endOfSentenceFormat: '([.?!][ \t\n\r\f<])|([.?!:]$)'
   KDocReferencesNonPublicProperty:
     active: false
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
   OutdatedDocumentation:
     active: false
     matchTypeParameters: true
@@ -74,7 +74,7 @@ comments:
     allowParamOnConstructorProperties: false
   UndocumentedPublicClass:
     active: false
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**'  ]
     searchInNestedClass: true
     searchInInnerClass: true
     searchInInnerObject: true
@@ -82,11 +82,11 @@ comments:
     searchInProtectedClass: false
   UndocumentedPublicFunction:
     active: false
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     searchProtectedFunction: false
   UndocumentedPublicProperty:
     active: false
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     searchProtectedProperty: false
 
 complexity:
@@ -158,14 +158,14 @@ complexity:
     active: false
   StringLiteralDuplication:
     active: false
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     threshold: 3
     ignoreAnnotation: true
     excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     thresholdInFiles: 11
     thresholdInClasses: 11
     thresholdInInterfaces: 11
@@ -240,7 +240,7 @@ exceptions:
       - 'toString'
   InstanceOfCheckForException:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
   NotImplementedDeclaration:
     active: true
   ObjectExtendsThrowable:
@@ -266,7 +266,7 @@ exceptions:
     active: false
   ThrowingExceptionsWithoutMessageOrCause:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     exceptions:
       - 'ArrayIndexOutOfBoundsException'
       - 'Exception'
@@ -281,7 +281,7 @@ exceptions:
     active: true
   TooGenericExceptionCaught:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     exceptionNames:
       - 'ArrayIndexOutOfBoundsException'
       - 'Error'
@@ -329,7 +329,7 @@ naming:
     minimumFunctionNameLength: 3
   FunctionNaming:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     functionPattern: '[a-z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
     ignoreOverridden: true
@@ -390,10 +390,10 @@ performance:
     threshold: 3
   ForEachOnRange:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
   SpreadOperator:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
   UnnecessaryPartOfBinaryExpression:
     active: false
   UnnecessaryTemporaryInstantiation:
@@ -485,7 +485,7 @@ potential-bugs:
     active: true
   UnsafeCallOnNullableType:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
   UnsafeCast:
     active: true
   UnusedUnaryOperator:
@@ -564,7 +564,7 @@ style:
     maxJumpCount: 1
   MagicNumber:
     active: true
-    excludes: [ '**/test/**' ]
+    excludes: [ '**/test/**', '**/integrationTest/**' ]
     ignoreNumbers:
       - '-1'
       - '0'
