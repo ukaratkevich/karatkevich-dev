@@ -1,0 +1,16 @@
+selectAll:
+SELECT * FROM Article;
+
+selectById:
+SELECT * FROM Article WHERE uid = :ui;
+
+insert:
+INSERT INTO Article VALUES ?;
+
+update:
+UPDATE Article
+SET title = :title, description = :description, cover = :cover, updatedAt = CURRENT_DATE
+WHERE uid = :uid;
+
+deleteById:
+DELETE FROM Article WHERE uid = :uid;

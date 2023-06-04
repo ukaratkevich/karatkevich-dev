@@ -1,6 +1,7 @@
 plugins {
     application
     id("kotlin-convention")
+    id("ktor-tests-convention")
 }
 
 group = "karatkevichdev"
