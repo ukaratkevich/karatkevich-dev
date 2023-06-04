@@ -1,10 +1,10 @@
-package dev.karatkevich.blog.articles1.model
+package dev.karatkevich.blog.articles.model
 
-import dev.karatkevich.blog.articles1.domain.ArticlesRepository
-import dev.karatkevich.blog.articles1.domain.entities.Article
-import dev.karatkevich.blog.articles1.domain.entities.Id
-import dev.karatkevich.blog.articles1.domain.entities.Id.Companion.toId
-import dev.karatkevich.blog.articles1.domain.entities.isEmpty
+import dev.karatkevich.blog.articles.domain.ArticlesRepository
+import dev.karatkevich.blog.articles.domain.entities.Article
+import dev.karatkevich.blog.articles.domain.entities.Id
+import dev.karatkevich.blog.articles.domain.entities.Id.Companion.toId
+import dev.karatkevich.blog.articles.domain.entities.isEmpty
 import java.util.UUID
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

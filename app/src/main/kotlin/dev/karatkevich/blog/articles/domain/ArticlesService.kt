@@ -1,7 +1,7 @@
-package dev.karatkevich.blog.articles1.domain
+package dev.karatkevich.blog.articles.domain
 
-import dev.karatkevich.blog.articles1.domain.entities.Article
-import dev.karatkevich.blog.articles1.domain.entities.Id
+import dev.karatkevich.blog.articles.domain.entities.Article
+import dev.karatkevich.blog.articles.domain.entities.Id
 
 class ArticlesService(
     private val repository: ArticlesRepository,

@@ -1,7 +1,7 @@
-package dev.karatkevich.blog.articles1.view
+package dev.karatkevich.blog.articles.view
 
-import dev.karatkevich.blog.articles1.domain.entities.Article
-import dev.karatkevich.blog.articles1.view.ArticleRepresentation.Response
+import dev.karatkevich.blog.articles.domain.entities.Article
+import dev.karatkevich.blog.articles.view.ArticleRepresentation.Response
 
 internal fun Article.toRepresentation(): Response {
     return Response(

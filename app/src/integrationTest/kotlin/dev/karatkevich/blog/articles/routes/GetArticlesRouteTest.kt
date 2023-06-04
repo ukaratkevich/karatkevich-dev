@@ -1,13 +1,13 @@
 package dev.karatkevich.blog.articles.routes
 
 import dev.karatkevich.blog.articles.ARTICLES_PATH
-import dev.karatkevich.blog.articles1.articlesRoutes
-import dev.karatkevich.blog.articles1.domain.ArticlesService
-import dev.karatkevich.blog.articles1.domain.entities.Article
-import dev.karatkevich.blog.articles1.domain.entities.Id.Companion.toId
-import dev.karatkevich.blog.articles1.model.InMemoryArticlesRepository
-import dev.karatkevich.blog.articles1.view.ArticleRepresentation
-import dev.karatkevich.blog.articles1.view.ArticleRepresentation.Response
+import dev.karatkevich.blog.articles.articlesRoutes
+import dev.karatkevich.blog.articles.domain.ArticlesService
+import dev.karatkevich.blog.articles.domain.entities.Article
+import dev.karatkevich.blog.articles.domain.entities.Id.Companion.toId
+import dev.karatkevich.blog.articles.model.InMemoryArticlesRepository
+import dev.karatkevich.blog.articles.view.ArticleRepresentation
+import dev.karatkevich.blog.articles.view.ArticleRepresentation.Response
 import dev.karatkevich.withBaseApplication
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.ktor.client.shouldHaveContentType

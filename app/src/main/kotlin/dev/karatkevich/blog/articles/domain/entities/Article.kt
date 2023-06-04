@@ -1,4 +1,4 @@
-package dev.karatkevich.blog.articles1.domain.entities
+package dev.karatkevich.blog.articles.domain.entities
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant

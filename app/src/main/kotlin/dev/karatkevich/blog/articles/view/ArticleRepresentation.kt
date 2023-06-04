@@ -1,4 +1,4 @@
-package dev.karatkevich.blog.articles1.view
+package dev.karatkevich.blog.articles.view
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

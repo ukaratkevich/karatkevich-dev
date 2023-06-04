@@ -1,6 +1,6 @@
-package dev.karatkevich.blog.articles1.view.validation
+package dev.karatkevich.blog.articles.view.validation
 
-import dev.karatkevich.blog.articles1.view.ArticleRepresentation
+import dev.karatkevich.blog.articles.view.ArticleRepresentation
 import io.ktor.server.application.install
 import io.ktor.server.plugins.requestvalidation.RequestValidation
 import io.ktor.server.plugins.requestvalidation.ValidationResult

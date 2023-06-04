@@ -1,10 +1,10 @@
-package dev.karatkevich.blog.articles1.routes
+package dev.karatkevich.blog.articles.routes
 
 import dev.karatkevich.blog.Blog
-import dev.karatkevich.blog.articles1.domain.ArticlesService
-import dev.karatkevich.blog.articles1.domain.entities.Article
-import dev.karatkevich.blog.articles1.domain.entities.Id
-import dev.karatkevich.blog.articles1.view.ArticleRepresentation
+import dev.karatkevich.blog.articles.domain.ArticlesService
+import dev.karatkevich.blog.articles.domain.entities.Article
+import dev.karatkevich.blog.articles.domain.entities.Id
+import dev.karatkevich.blog.articles.view.ArticleRepresentation
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
