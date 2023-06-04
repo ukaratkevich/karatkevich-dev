@@ -13,6 +13,9 @@ loggerVersion = "1.4.6"
 # lint
 detektVersion = "1.22.0"
 
+# database
+sqldelight = "2.0.0-rc01"
+
 # test
 kotest = "5.6.1"
 kotestKtor = "2.0.0"
@@ -42,6 +45,10 @@ ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiati
 detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektVersion" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektVersion" }
 
+# database
+sqldelight = { module = "app.cash:sqldelight", version.ref = "sqldelight" }
+sqldelight-sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+
 # test
 kotestRunner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotestAssertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
@@ -51,6 +58,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 [plugins]
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [bundles]
 ktorServer = ["ktorCore",
